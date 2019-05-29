@@ -18,7 +18,7 @@
 import logging
 
 from serial import Serial
-from grbl import XYGrblMotion
+from rail_control import XYGrblMotion
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
