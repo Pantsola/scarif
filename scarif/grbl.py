@@ -54,9 +54,9 @@ class GrblCtrl(object):
 
     Parameters
     ----------
-    port: USB serial device to connect to, e.g. /dev/serial
-    baudrate: communications bit rate, e.g. 115200
-    timeout: USB serial communcations timeout in seconds
+    port : string : USB serial device to connect to, e.g. /dev/serial
+    baudrate: integer : communications bit rate, e.g. 115200
+    timeout: integer : USB serial communcations timeout in seconds
 
     Raises
     ------
