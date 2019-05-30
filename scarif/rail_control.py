@@ -141,11 +141,11 @@ class GrblCtrl(object):
 
     def save_grbl_setting(self, x, value):
         """$x=value (save Grbl setting)"""
-        return self._system_command('$%s=%s' % (str(x), str(value)))
+        return self._system_command('${}={}'.format(x, value))
 
     def save_startup_block(self, x, line):
         """$Nx=line (save startup block)"""
-        return self._system_command('$N%s=%s' % (str(x), str(line)))
+        return self._system_command('$N{}={}'.format(x, line))
 
     def check_gcode_mode(self):
         """$C (check gcode mode)"""
@@ -229,11 +229,11 @@ class XYGrblMotion(object):
         return self.grbl_ctrl._system_command('$X')
 
     def stepper_motors_always_on(self):
-        """$10=255 (kill alarm lock)"""
+        """$1=255 (stepper motor always on)"""
         return self.grbl_ctrl._system_command('$1=255')
 
     def stepper_motors_sleep(self):
-        """$10=255 (kill alarm lock)"""
+        """$1=0 (stepper motor sleep)"""
         return self.grbl_ctrl._system_command('$1=0')
 
     def goto_x_y(self, x, y, motion_mode='G0'):
@@ -256,8 +256,8 @@ class XYGrblMotion(object):
             curr_stat = self.current_status()
             state = curr_stat['state']
             x_cur, y_cur = curr_stat['w_pos']
-            x_diff = float(x)-float(x_cur)
-            y_diff = float(y)-float(y_cur)
+            x_diff = float(x) - float(x_cur)
+            y_diff = float(y) - float(y_cur)
             logger.debug('x == %s (%f), y == %s (%f)' % (
                 x_cur, x_diff, y_cur, y_diff))
             if state == 'Idle' and x_diff == 0.0 and y_diff == 0.0:

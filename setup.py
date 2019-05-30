@@ -28,9 +28,6 @@ setup(
         "serial"
     ],
     url='http://ska.ac.za/',
-    scripts=[
-        "scripts/example.py",
-    ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

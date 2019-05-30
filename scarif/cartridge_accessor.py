@@ -31,6 +31,11 @@ class SoftLimitExceededException(Exception):
     pass
 
 
+class InvalidPickerCommand(Exception):
+    """An invalid picker command"""
+    pass
+
+
 class Head(XYGrblMotion):
     """A class with methods for moving a tape library head along x and y axes.
 
@@ -83,10 +88,10 @@ class Head(XYGrblMotion):
         Method from inherited class
         """
         if not float(self.x_limits[0]) <= float(x) <= float(self.x_limits[1]):
-            raise SoftLimitExceededException('%s out of range [%s %s]' % (
+            raise SoftLimitExceededException('%s out of x limits [%s %s]' % (
                 x, self.x_limits[0], self.x_limits[1]))
         if not float(self.y_limits[0]) <= float(y) <= float(self.y_limits[1]):
-            raise SoftLimitExceededException('%s out of range [%s %s]' % (
+            raise SoftLimitExceededException('%s out of y limits [%s %s]' % (
                 y, self.y_limits[0], self.y_limits[1]))
         return super(Head, self).goto_x_y(x, y)
 
@@ -130,6 +135,7 @@ class Picker(object):
         self._serial.baudrate = baudrate
         self._serial.timeout = timeout
         self.open()
+        self.cmds = {'insert': 'i', 'retrieve': 'r', 'home': 'h'}
 
     def open(self):
         """Open the USB serial port to the arduino."""
@@ -143,32 +149,25 @@ class Picker(object):
         """Configure the picker. Currently does nothing."""
         pass
 
-    def insert(self):
-        """Execute an insert sequence on the picker arduino."""
-        self._serial.write("i")
+    def _send_cmd(self, cmd):
+        if cmd not in self.cmds.values():
+            raise InvalidPickerCommand('%s not a valid picker command' % (cmd))
+        self._serial.write(cmd)
         while True:
             data = self._serial.readline()
             if data:
                 logger.debug(data.rstrip('\n'))
                 if data.startswith('end'):
                     break
+
+    def insert(self):
+        """Execute an insert sequence on the picker arduino."""
+        self._send_cmd(self.cmds['insert'])
 
     def retrieve(self):
         """Execute a retrieve sequence on the picker arduino."""
-        self._serial.write("r")
-        while True:
-            data = self._serial.readline()
-            if data:
-                logger.debug(data.rstrip('\n'))
-                if data.startswith('end'):
-                    break
+        self._send_cmd(self.cmds['retrieve'])
 
     def home(self):
         """Execute a home sequence on the picker arduino."""
-        self._serial.write("h")
-        while True:
-            data = self._serial.readline()
-            if data:
-                logger.debug(data.rstrip('\n'))
-                if data.startswith('end'):
-                    break
+        self._send_cmd(self.cmds['home'])
