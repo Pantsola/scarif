@@ -109,10 +109,10 @@ class Head(XYGrblMotion):
         self.goto_x_y(curr_stat['w_pos'][0], '%.3f' % (y_new))
 
     def down(self, count):
-        self.up(-1*count)
+        self.up(-1 * count)
 
     def right(self, count):
-        self.left(-1*count)
+        self.left(-1 * count)
 
 
 class Picker(object):
