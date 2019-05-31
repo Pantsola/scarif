@@ -81,7 +81,7 @@ class GrblCtrl(object):
         if not self._serial.isOpen():
             raise GrblSerialException('%s port is not open' % (self.port))
         result = self._serial.write(command+'\n')
-        logger.debug('cmd: "%s" ret %i' % (command, result))
+        logger.debug('cmd: "%s" ret %i', command, result)
         return self._response()
 
     def _response(self):
